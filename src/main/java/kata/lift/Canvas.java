@@ -26,7 +26,7 @@ public class Canvas extends JPanel {
       setBackground(Color.white);
       setLayout(null); // manual position elements
 
-      LiftController liftController = new LiftController(0);
+      ILiftController liftController = new LiftController(0);
 
 //      for (int e = 0; e < LIFT_COUNT; e++) {
       int e = 0;

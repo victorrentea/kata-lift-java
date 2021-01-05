@@ -20,7 +20,7 @@ import static kata.lift.LiftEngineCommand.*;
 
 public class LiftTest {
 
-   private LiftController lift = new LiftController(0);
+   private ILiftController lift = new LiftController(0);
 
    @Test
    public void opensDoorsWhenCalledFromOnSameFloor() {
@@ -93,7 +93,7 @@ public class LiftTest {
       assertEquals(GO_UP, lift.onDoorsClosed().get());
       assertEquals(OPEN_DOORS, lift.onFloor());
       assertFalse(lift.onDoorsClosed().isPresent());
-      assertEquals(empty(), lift.getDirection());
+      assertEquals(empty(), lift.getCurrentDirection());
    }
 
    @Test
@@ -136,7 +136,7 @@ public class LiftTest {
       assertEquals(GO_DOWN, lift.onFloor());
       assertEquals(0, lift.getCurrentFloor());
       assertEquals(OPEN_DOORS, lift.onFloor());
-      assertThat(lift.getDirection()).isEmpty();
+      assertThat(lift.getCurrentDirection()).isEmpty();
       assertFalse(lift.onDoorsClosed().isPresent());
    }
    @Test
@@ -148,7 +148,7 @@ public class LiftTest {
       assertEquals(GO_UP, lift.onFloor());
       assertEquals(0, lift.getCurrentFloor());
       assertEquals(OPEN_DOORS, lift.onFloor());
-      assertThat(lift.getDirection()).hasValue(UP);
+      assertThat(lift.getCurrentDirection()).hasValue(UP);
       assertFalse(lift.onDoorsClosed().isPresent());
    }
    @Test
@@ -237,7 +237,7 @@ public class LiftTest {
    public void internalCall() {
       assertEquals(of(OPEN_DOORS), lift.call(new Call(0, UP)));
       assertEquals(empty(), lift.call(new Call(3)));
-      assertThat(lift.getDirection()).hasValue(UP);
+      assertThat(lift.getCurrentDirection()).hasValue(UP);
       assertEquals(of(GO_UP), lift.onDoorsClosed());
    }
    
@@ -245,11 +245,11 @@ public class LiftTest {
    public void doubleUpDownOnCurrentFloor() {
       assertEquals(of(OPEN_DOORS), lift.call(new Call(0, UP)));;
       assertEquals(empty(), lift.call(new Call(0, DOWN)));
-      assertThat(lift.getDirection()).hasValue(UP);
+      assertThat(lift.getCurrentDirection()).hasValue(UP);
       assertEquals(of(OPEN_DOORS), lift.onDoorsClosed());
-      assertThat(lift.getDirection()).hasValue(DOWN);
+      assertThat(lift.getCurrentDirection()).hasValue(DOWN);
       assertEquals(empty(), lift.onDoorsClosed());
-      assertThat(lift.getDirection()).isEmpty();
+      assertThat(lift.getCurrentDirection()).isEmpty();
 
    }
    //

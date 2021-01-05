@@ -5,13 +5,13 @@ import java.util.List;
 import static java.util.stream.Collectors.toList;
 
 public class LiftSystem {
-   private final LiftController controller;
+   private final ILiftController controller;
    private final LiftEngine engine;
    private final LiftView view;
    private final List<Integer> floorHeights;
    int prevFloor;
 
-   LiftSystem(LiftController controller, LiftEngine engine, LiftView view, List<Integer> floorHeights) {
+   LiftSystem(ILiftController controller, LiftEngine engine, LiftView view, List<Integer> floorHeights) {
       this.controller = controller;
       this.engine = engine;
       this.view = view;
@@ -51,7 +51,7 @@ public class LiftSystem {
       view.setH(engine.h);
       view.setFillRatio(engine.getDoorFillRatio());
 
-      view.showCurrentFloor(controller.getCurrentFloor(), controller.getDirection().orElse(null));
+      view.showCurrentFloor(controller.getCurrentFloor(), controller.getCurrentDirection().orElse(null));
 
       List<Integer> internalCalls = controller.getNextCalls().stream()
           .filter(Call::isInternal).map(Call::getFloor).collect(toList());

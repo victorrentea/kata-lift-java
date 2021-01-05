@@ -12,7 +12,7 @@ import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
 
 @Slf4j
-public class LiftController {
+public class LiftController implements ILiftController {
    private int currentFloor;
 
    private Status status = Status.STOPPED;
@@ -73,11 +73,13 @@ public class LiftController {
       return result;
    }
 
+   @Override
    public int getCurrentFloor() {
       return currentFloor;
    }
 
-   public Optional<Direction> getDirection() {
+   @Override
+   public Optional<Direction> getCurrentDirection() {
       return switch (status) {
          case GOING_UP -> Optional.of(Direction.UP);
          case GOING_DOWN -> Optional.of(Direction.DOWN);
@@ -85,10 +87,12 @@ public class LiftController {
       };
    }
 
+   @Override
    public List<Call> getNextCalls() {
       return nextCalls;
    }
 
+   @Override
    public LiftEngineCommand onFloor() {
       if (status == Status.GOING_UP) {
          currentFloor++;
@@ -109,6 +113,7 @@ public class LiftController {
       return getUpDownCommand();
    }
 
+   @Override
    public Optional<LiftEngineCommand> onDoorsClosed() {
       log.info("Doors closed");
       nextCalls.removeIf(call -> call.getFloor() == currentFloor && (call.isInternal() || status.canServe(call.getDirection())));
@@ -120,6 +125,7 @@ public class LiftController {
       return of(getUpDownCommand());
    }
 
+   @Override
    public Optional<LiftEngineCommand> call(Call call) {
       log.info("Call " + call);
       if (nextCalls.contains(call)) {
