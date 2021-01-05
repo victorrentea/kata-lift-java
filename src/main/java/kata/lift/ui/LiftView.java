@@ -1,5 +1,8 @@
-package kata.lift;
+package kata.lift.ui;
 
+import kata.lift.Call;
+import kata.lift.Direction;
+import kata.lift.ui.Canvas;
 import lombok.Getter;
 import lombok.Setter;
 

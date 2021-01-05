@@ -1,4 +1,6 @@
-package kata.lift;
+package kata.lift.ui;
+
+import kata.lift.*;
 
 import java.util.List;
 

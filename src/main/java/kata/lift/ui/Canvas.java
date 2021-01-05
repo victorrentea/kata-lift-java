@@ -1,5 +1,6 @@
-package kata.lift;
+package kata.lift.ui;
 
+import kata.lift.*;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.swing.*;

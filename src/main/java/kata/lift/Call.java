@@ -22,7 +22,7 @@ public class Call {
       return getDirection() == Direction.DOWN;
    }
 
-   boolean isInternal() {
+   public boolean isInternal() {
       return getDirection() == null;
    }
 
@@ -61,7 +61,7 @@ public class Call {
       return Objects.hash(floor, direction);
    }
 
-   boolean isExternal() {
+   public boolean isExternal() {
       return getDirection() != null;
    }
 }
