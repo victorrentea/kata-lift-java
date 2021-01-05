@@ -69,7 +69,7 @@ public class LiftController implements ILiftController {
          result.addAll(callsAboveUp);
          result.addAll(callsAboveDown);
       }
-      log.info("Reordered {} into {}", calls, result);
+//      log.info("Reordered {} into {}", calls, result);
       return result;
    }
 
@@ -99,10 +99,10 @@ public class LiftController implements ILiftController {
       } else {
          currentFloor--;
       }
-      log.info("On Floor." + currentFloor + ". Next calls: " + nextCalls);
+//      log.info("On Floor." + currentFloor + ". Next calls: " + nextCalls);
 
       if (nextCalls.get(0).getFloor() == currentFloor) {
-         log.info("Opening doors");
+//         log.info("Opening doors");
          if (nextCalls.get(0).getDirection() != null) {
             status = Status.from(nextCalls.get(0).getDirection());
          } else {
@@ -115,9 +115,9 @@ public class LiftController implements ILiftController {
 
    @Override
    public Optional<LiftEngineCommand> onDoorsClosed() {
-      log.info("Doors closed");
+//      log.info("Doors closed");
       nextCalls.removeIf(call -> call.getFloor() == currentFloor && (call.isInternal() || status.canServe(call.getDirection())));
-      log.info("Remaining calls: " + nextCalls);
+//      log.info("Remaining calls: " + nextCalls);
       if (nextCalls.isEmpty()) {
          status = Status.STOPPED;
          return empty();
@@ -127,9 +127,9 @@ public class LiftController implements ILiftController {
 
    @Override
    public Optional<LiftEngineCommand> call(Call call) {
-      log.info("Call " + call);
+//      log.info("Call " + call);
       if (nextCalls.contains(call)) {
-         log.info("Ingoring duplicate call");
+//         log.info("Ingoring duplicate call");
          return empty();
       }
       nextCalls.add(call);

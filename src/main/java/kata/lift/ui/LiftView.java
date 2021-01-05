@@ -2,7 +2,6 @@ package kata.lift.ui;
 
 import kata.lift.Call;
 import kata.lift.Direction;
-import kata.lift.ui.Canvas;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -66,7 +65,7 @@ public class LiftView {
    }
 
    public void drawLift(Graphics2D g2d) {
-      int y = Canvas.Y0 - 40 - h;
+      int y = LiftApp.Y0 - 40 - h;
       g2d.setColor(Color.ORANGE);
       int doorW = (int) (24 * fillRatio);
       g2d.fillRect(getX() + 1, y, doorW, 38);

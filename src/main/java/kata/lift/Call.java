@@ -42,7 +42,7 @@ public class Call {
    public String toString() {
       String directionStr = "";
       if (direction != null) {
-         directionStr = direction == Direction.UP ? "▲" : "▼";
+         directionStr = direction.symbol;// == Direction.UP ? "▲" : "▼";
       }
       return "(" + floor + directionStr+ ")";
    }
