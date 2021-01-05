@@ -11,10 +11,11 @@ import static java.util.Arrays.asList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static java.util.stream.Collectors.toList;
+import static org.assertj.core.api.Assertions.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static kata.lift.CallDirection.DOWN;
-import static kata.lift.CallDirection.UP;
+import static kata.lift.Direction.DOWN;
+import static kata.lift.Direction.UP;
 import static kata.lift.LiftEngineCommand.*;
 
 public class LiftTest {
@@ -92,7 +93,7 @@ public class LiftTest {
       assertEquals(GO_UP, lift.onDoorsClosed().get());
       assertEquals(OPEN_DOORS, lift.onFloor());
       assertFalse(lift.onDoorsClosed().isPresent());
-      assertEquals(Status.STOPPED, lift.getStatus());
+      assertEquals(empty(), lift.getDirection());
    }
 
    @Test
@@ -135,7 +136,7 @@ public class LiftTest {
       assertEquals(GO_DOWN, lift.onFloor());
       assertEquals(0, lift.getCurrentFloor());
       assertEquals(OPEN_DOORS, lift.onFloor());
-      assertEquals(Status.GOING_UP, lift.getStatus());
+      assertThat(lift.getDirection()).isEmpty();
       assertFalse(lift.onDoorsClosed().isPresent());
    }
    @Test
@@ -147,7 +148,7 @@ public class LiftTest {
       assertEquals(GO_UP, lift.onFloor());
       assertEquals(0, lift.getCurrentFloor());
       assertEquals(OPEN_DOORS, lift.onFloor());
-      assertEquals(Status.GOING_UP, lift.getStatus());
+      assertThat(lift.getDirection()).hasValue(UP);
       assertFalse(lift.onDoorsClosed().isPresent());
    }
    @Test
@@ -173,11 +174,11 @@ public class LiftTest {
    @Test
    public void callSequenceOutOfOrderDOWN() {
       lift.call(new Call(2, UP));
-      lift.call(new Call(1, CallDirection.DOWN));
+      lift.call(new Call(1, Direction.DOWN));
       lift.call(new Call(-1, DOWN));
       lift.call(new Call(-4, UP));
 
-      assertEquals(asList(2,1,-1,-4), lift.getNextCallFloors());
+      assertEquals(asList(2,1,-1,-4), lift.getNextCalls().stream().map(Call::getFloor).collect(toList()));
       List<String> stops = getStops();
 
       assertEquals(asList("1","*2","*1","0","*-1","-2","-3","*-4"), stops);
@@ -236,7 +237,7 @@ public class LiftTest {
    public void internalCall() {
       assertEquals(of(OPEN_DOORS), lift.call(new Call(0, UP)));
       assertEquals(empty(), lift.call(new Call(3)));
-      assertEquals(Status.GOING_UP, lift.getStatus());
+      assertThat(lift.getDirection()).hasValue(UP);
       assertEquals(of(GO_UP), lift.onDoorsClosed());
    }
    
@@ -244,11 +245,11 @@ public class LiftTest {
    public void doubleUpDownOnCurrentFloor() {
       assertEquals(of(OPEN_DOORS), lift.call(new Call(0, UP)));;
       assertEquals(empty(), lift.call(new Call(0, DOWN)));
-      assertEquals(Status.GOING_UP, lift.getStatus());
+      assertThat(lift.getDirection()).hasValue(UP);
       assertEquals(of(OPEN_DOORS), lift.onDoorsClosed());
-      assertEquals(Status.GOING_DOWN, lift.getStatus());
+      assertThat(lift.getDirection()).hasValue(DOWN);
       assertEquals(empty(), lift.onDoorsClosed());
-      assertEquals(Status.STOPPED, lift.getStatus());
+      assertThat(lift.getDirection()).isEmpty();
 
    }
    //

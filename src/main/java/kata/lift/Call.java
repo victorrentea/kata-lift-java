@@ -4,9 +4,9 @@ import java.util.Objects;
 
 public class Call {
    private final int floor;
-   private final CallDirection direction;
+   private final Direction direction;
 
-   public Call(int floor, CallDirection direction) {
+   public Call(int floor, Direction direction) {
       this.floor = floor;
       this.direction = direction;
    }
@@ -14,8 +14,12 @@ public class Call {
       this(floor, null);
    }
 
+   public static String translateFloor(int f) {
+      return f == 0 ? "P" : f + "";
+   }
+
    boolean isDown() {
-      return getDirection() == CallDirection.DOWN;
+      return getDirection() == Direction.DOWN;
    }
 
    boolean isInternal() {
@@ -23,14 +27,14 @@ public class Call {
    }
 
    boolean isUp() {
-      return getDirection() == CallDirection.UP;
+      return getDirection() == Direction.UP;
    }
 
    public int getFloor() {
       return floor;
    }
 
-   public CallDirection getDirection() {
+   public Direction getDirection() {
       return direction;
    }
 
@@ -38,7 +42,7 @@ public class Call {
    public String toString() {
       String directionStr = "";
       if (direction != null) {
-         directionStr = direction == CallDirection.UP ? "▲" : "▼";
+         directionStr = direction == Direction.UP ? "▲" : "▼";
       }
       return "(" + floor + directionStr+ ")";
    }
@@ -55,5 +59,9 @@ public class Call {
    @Override
    public int hashCode() {
       return Objects.hash(floor, direction);
+   }
+
+   boolean isExternal() {
+      return getDirection() != null;
    }
 }
