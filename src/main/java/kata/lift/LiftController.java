@@ -19,37 +19,31 @@ public class LiftController implements ILiftController {
 
    @Override
    public int getCurrentFloor() {
-      // TODO
       return 0;
    }
 
    @Override
    public Optional<Direction> getCurrentDirection() {
-      // TODO
       return empty();
    }
 
    @Override
    public List<Call> getNextCalls() {
-      // TODO
       return Collections.emptyList();
    }
 
    @Override
    public LiftEngineCommand onFloor() {
-      // TODO
       return LiftEngineCommand.OPEN_DOORS;
    }
 
    @Override
    public Optional<LiftEngineCommand> onDoorsClosed() {
-      // TODO
       return empty();
    }
 
    @Override
    public Optional<LiftEngineCommand> call(Call call) {
-      // TODO
       return empty();
    }
 }
