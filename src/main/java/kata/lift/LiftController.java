@@ -8,17 +8,45 @@ import java.util.Optional;
 
 import static java.util.Comparator.comparing;
 import static java.util.Optional.empty;
+import static java.util.Optional.of;
+import static kata.lift.Direction.DOWN;
+import static kata.lift.Direction.UP;
+import static kata.lift.LiftEngineCommand.GO_DOWN;
+import static kata.lift.LiftEngineCommand.GO_UP;
 
 @Slf4j
 public class LiftController implements ILiftController {
 
+   private int currentFloor;
+   private int calledFromFloor;
+
+   public LiftController(int initialFloor) {
+      this.currentFloor = initialFloor;
+   }
+
    @Override
    public int getCurrentFloor() {
-      return 0;
+      return currentFloor;
    }
 
    @Override
    public Optional<Direction> getCurrentDirection() {
+      if (calledFromFloor > currentFloor) {
+         return of(UP);
+      } else if (calledFromFloor < currentFloor) {
+         return of(DOWN);
+      }
+      return empty();
+   }
+
+   @Override
+   public Optional<LiftEngineCommand> call(Call call) {
+      calledFromFloor = call.getFloor();
+      if (calledFromFloor > currentFloor) {
+         return of(GO_UP);
+      } else if (calledFromFloor < currentFloor) {
+         return of(GO_DOWN);
+      }
       return empty();
    }
 
@@ -29,16 +57,16 @@ public class LiftController implements ILiftController {
 
    @Override
    public LiftEngineCommand onFloor() {
+      if (calledFromFloor > currentFloor) {
+         currentFloor ++;
+      } else /*if (calledFromFloor < currentFloor)*/{ // impossible imputs (assumed)
+         currentFloor --;
+      }
       return LiftEngineCommand.OPEN_DOORS;
    }
 
    @Override
    public Optional<LiftEngineCommand> onDoorsClosed() {
-      return empty();
-   }
-
-   @Override
-   public Optional<LiftEngineCommand> call(Call call) {
       return empty();
    }
 }

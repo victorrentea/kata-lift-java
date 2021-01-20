@@ -38,7 +38,7 @@ public class LiftApp extends JPanel {
       setBackground(Color.white);
       setLayout(null); // manual position elements
 
-      ILiftController liftController = new LiftControllerLogger(new LiftController(), System.out::println);
+      ILiftController liftController = new LiftControllerLogger(new LiftController(0), System.out::println);
 
 //      for (int e = 0; e < LIFT_COUNT; e++) {
       int e = 0;
