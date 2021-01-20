@@ -2,20 +2,15 @@ package kata.lift;
 
 import lombok.extern.slf4j.Slf4j;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 import static java.util.Comparator.comparing;
 import static java.util.Optional.empty;
-import static java.util.Optional.of;
-import static java.util.stream.Collectors.toList;
 
 @Slf4j
 public class LiftController implements ILiftController {
-   public LiftController(int startFloor) {
-   }
 
    @Override
    public int getCurrentFloor() {
