@@ -2,6 +2,7 @@ package kata.lift;
 
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -11,14 +12,13 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static kata.lift.Direction.DOWN;
 import static kata.lift.Direction.UP;
-import static kata.lift.LiftEngineCommand.GO_DOWN;
-import static kata.lift.LiftEngineCommand.GO_UP;
+import static kata.lift.LiftEngineCommand.*;
 
 @Slf4j
 public class LiftController implements ILiftController {
 
    private int currentFloor;
-   private int calledFromFloor;
+   private Call currentCall;
 
    public LiftController(int initialFloor) {
       this.currentFloor = initialFloor;
@@ -31,9 +31,12 @@ public class LiftController implements ILiftController {
 
    @Override
    public Optional<Direction> getCurrentDirection() {
-      if (calledFromFloor > currentFloor) {
+      if (currentCall == null) {
+         return empty();
+      }
+      if (currentCall.getFloor() > currentFloor) {
          return of(UP);
-      } else if (calledFromFloor < currentFloor) {
+      } else if (currentCall.getFloor() < currentFloor) {
          return of(DOWN);
       }
       return empty();
@@ -41,32 +44,45 @@ public class LiftController implements ILiftController {
 
    @Override
    public Optional<LiftEngineCommand> call(Call call) {
-      calledFromFloor = call.getFloor();
-      if (calledFromFloor > currentFloor) {
+      currentCall = call;
+      if (currentCall.getFloor() > currentFloor) {
          return of(GO_UP);
-      } else if (calledFromFloor < currentFloor) {
+      } else if (currentCall.getFloor() < currentFloor) {
          return of(GO_DOWN);
       }
-      return empty();
+      return of(OPEN_DOORS);
    }
 
    @Override
    public List<Call> getNextCalls() {
-      return Collections.emptyList();
+      if (currentCall == null) {
+         return Collections.emptyList();
+      }
+      return Arrays.asList(currentCall);
    }
 
    @Override
    public LiftEngineCommand onFloor() {
-      if (calledFromFloor > currentFloor) {
+      if (currentCall.getFloor() > currentFloor) {
          currentFloor ++;
-      } else /*if (calledFromFloor < currentFloor)*/{ // impossible imputs (assumed)
+         if (currentFloor == currentCall.getFloor()) {
+            currentCall = null;
+            return OPEN_DOORS;
+         } else {
+            return GO_UP;
+         }
+      } else {
          currentFloor --;
+         if (currentFloor == currentCall.getFloor()) {
+            return OPEN_DOORS;
+         } else {
+            return GO_DOWN;
+         }
       }
-      return LiftEngineCommand.OPEN_DOORS;
    }
 
    @Override
    public Optional<LiftEngineCommand> onDoorsClosed() {
-      return empty();
+      return empty(); // if (curentCall.floor == currentFloor) = null
    }
 }
